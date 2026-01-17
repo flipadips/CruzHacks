@@ -1,0 +1,84 @@
+openapi: 3.0.0
+info:
+  title: Cruzhacks API
+  version: 1.0.0
+  description: API documentation for Cruzhacks application
+
+servers:
+  - url: http://localhost:5000
+    description: Development server
+
+tags:
+  - name: Health
+    description: Health check endpoints
+  - name: Database
+    description: Database connection endpoints
+
+paths:
+  /:
+    get:
+      summary: Get API information
+      tags:
+        - Health
+      responses:
+        '200':
+          description: API information and available endpoints
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Cruzhacks API
+                  endpoints:
+                    type: object
+                    properties:
+                      docs:
+                        type: string
+                        example: http://localhost:5000/api-docs
+                      health:
+                        type: string
+                        example: /api/health
+                      data:
+                        type: string
+                        example: /api/data
+
+  /api/health:
+    get:
+      summary: Check if backend is running
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Backend is running
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Backend is running!
+
+  /api/data:
+    get:
+      summary: Get database connection status
+      tags:
+        - Database
+      responses:
+        '200':
+          description: Database connection status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Connected to database
+                  timestamp:
+                    type: object
+                  warning:
+                    type: string
+                    example: PostgreSQL is not running...
