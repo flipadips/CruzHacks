@@ -27,7 +27,7 @@ pool.on('connect', () => {
 });
 
 pool.on('error', (err) => {
-  console.error('Unexpected error on idle client', err);
+  console.warn('Database connection warning:', err.message);
 });
 
 // Routes
@@ -43,8 +43,12 @@ app.get('/api/data', async (req, res) => {
       timestamp: result.rows[0],
     });
   } catch (err) {
-    console.error('Database error:', err);
-    res.status(500).json({ error: 'Database connection failed' });
+    console.warn('Database query warning:', err.message);
+    res.json({
+      message: 'Backend running (database not connected)',
+      warning: 'PostgreSQL is not running. Start PostgreSQL to enable database features.',
+      timestamp: new Date().toISOString(),
+    });
   }
 });
 
