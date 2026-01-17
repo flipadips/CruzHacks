@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import './LoginForm.css';
 import { userContext } from './App';
 
-const LoginForm = () => {
+function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const {setUser} = useContext(userContext);
@@ -45,6 +45,6 @@ const LoginForm = () => {
       </div>
     </div>
   );
-};
+}
 
 export default LoginForm;
