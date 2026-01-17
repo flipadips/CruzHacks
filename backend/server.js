@@ -1,19 +1,36 @@
-const express = require('express');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const { Pool } = require('pg');
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./swagger');
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'js-yaml';
+import fs from 'fs';
+import { Pool } from 'pg';
+
+import * as auth from './auth.js';
+import * as posts from './posts.js';
+import * as groups from './groups.js';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
 app.use(express.json());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(express.urlencoded({ extended: false }));
+
+// CORS configuration
+app.use(cors());
+
+// Swagger setup
+const apiSpec = path.join(__dirname, './openapi.yaml');
+const apidoc = yaml.load(fs.readFileSync(apiSpec, 'utf8'));
+app.use('/api/v0/docs', swaggerUi.serve, swaggerUi.setup(apidoc));
 
 // PostgreSQL connection pool
 const pool = new Pool({
@@ -33,65 +50,29 @@ pool.on('error', (err) => {
   console.warn('Database connection warning:', err.message);
 });
 
+// Make pool available to route handlers
+app.locals.pool = pool;
+
 // Root route
 app.get('/', (req, res) => {
   res.json({
     message: 'Cruzhacks API',
     endpoints: {
-      docs: `http://localhost:${PORT}/api-docs`,
+      docs: `http://localhost:${PORT}/api/v0/docs`,
       health: '/api/health',
-      data: '/api/data',
+      posts: '/api/v0/posts',
+      groups: '/api/v0/groups',
     },
   });
 });
 
-// Routes
-/**
- * @swagger
- * /api/health:
- *   get:
- *     summary: Check if backend is running
- *     tags:
- *       - Health
- *     responses:
- *       200:
- *         description: Backend is running
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: Backend is running!
- */
+// Health check route
 app.get('/api/health', (req, res) => {
   res.json({ status: 'Backend is running!' });
 });
 
-/**
- * @swagger
- * /api/data:
- *   get:
- *     summary: Get database connection status
- *     tags:
- *       - Database
- *     responses:
- *       200:
- *         description: Database connection status
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 timestamp:
- *                   type: string
- *                 warning:
- *                   type: string
- */
-app.get('/api/data', async (req, res) => {
+// Data connection test route
+app.get('/api/data', async (req, res, next) => {
   try {
     const result = await pool.query('SELECT NOW()');
     res.json({
@@ -99,7 +80,6 @@ app.get('/api/data', async (req, res) => {
       timestamp: result.rows[0],
     });
   } catch (err) {
-    console.warn('Database query warning:', err.message);
     res.json({
       message: 'Backend running (database not connected)',
       warning: 'PostgreSQL is not running. Start PostgreSQL to enable database features.',
@@ -108,8 +88,28 @@ app.get('/api/data', async (req, res) => {
   }
 });
 
+// Your routes go here; do NOT write them inline.
+// Create additional modules and delegate to their exports.
+app.post('/api/v0/login', auth.login);
+app.get('/api/v0/posts', auth.authenticate, posts.getPosts);
+app.post('/api/v0/posts', auth.authenticate, posts.createPost);
+app.get('/api/v0/groups', auth.authenticate, groups.getGroups);
+app.get('/api/v0/groups/:id/posts', auth.authenticate, groups.getGroupPosts);
+
+// Centralized error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(err.status || 500).json({
+    message: err.message,
+    errors: err.errors || [],
+    status: err.status || 500,
+  });
+});
+
+export default app;
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`API docs available at http://localhost:${PORT}/api-docs`);
+  console.log(`API docs available at http://localhost:${PORT}/api/v0/docs`);
 });
