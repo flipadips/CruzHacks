@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import { useState, useContext } from 'react';
 import './LoginForm.css';
+import { userContext } from './App';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const {setUser} = useContext(userContext);
 
   const handleSubmit = () => {
     console.log('Login submitted:', { username, password });
-    // login logic here
+    setUser(username);
   };
 
   return (
