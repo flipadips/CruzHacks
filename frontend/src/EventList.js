@@ -14,6 +14,27 @@ function List({items}) {
     return `${month} ${day} ${time}`;
   };
 
+  const renderDescription = (description) => {
+    // Parse URLs and make them clickable
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = description.split(urlRegex);
+    
+    return parts.map((part, index) => {
+      if (urlRegex.test(part)) {
+        return (
+          <a 
+            key={index} 
+            href={part}
+            onClick={(e) => e.stopPropagation()}
+          >
+            Here
+          </a>
+        );
+      }
+      return part;
+    });
+  };
+
   const handleItemClick = (item) => {
     console.log('Item clicked:', item.x); 
     console.log('Item clicked:', item.y);
@@ -31,7 +52,7 @@ function List({items}) {
           <div className="list-item-content">
             <div>
               <h2>{item.title}</h2>
-              <p>{item.description}</p>
+              <p>{renderDescription(item.description)}</p>
             </div>
             <div className="list-item-date">
               {formatDate(item.event_date)}

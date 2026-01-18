@@ -8,6 +8,7 @@ function MapWindow({ markers }) {
   const { isCreateMode, popupCoords, setPopupCoords, events, addEvent, focusLocation } = useContext(CreateModeContext);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [eventDate, setEventDate] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,6 +23,7 @@ function MapWindow({ markers }) {
         body: JSON.stringify({ 
           title: title,
           content: description,
+          event_date: eventDate,
           coordinates: { x: popupCoords.x, y: popupCoords.y }
         }),
       });
@@ -36,6 +38,7 @@ function MapWindow({ markers }) {
       const newEvent = {
         title,
         description,
+        event_date: eventDate,
         x: popupCoords.x,
         y: popupCoords.y
       };
@@ -44,6 +47,7 @@ function MapWindow({ markers }) {
       // Reset form
       setTitle('');
       setDescription('');
+      setEventDate('');
       setPopupCoords(null);
     } catch (err) {
       console.error('Post creation error:', err);
@@ -82,6 +86,16 @@ function MapWindow({ markers }) {
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Enter event description"
                   rows="4"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="eventDate">Event Date & Time:</label>
+                <input
+                  type="datetime-local"
+                  id="eventDate"
+                  value={eventDate}
+                  onChange={(e) => setEventDate(e.target.value)}
                   required
                 />
               </div>

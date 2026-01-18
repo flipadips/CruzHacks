@@ -27,12 +27,12 @@ export const getPosts = async (req, res, next) => {
 export const createPost = async (req, res, next) => {
   try {
     const pool = req.app.locals.pool;
-    const { title, content, coordinates } = req.body;
+    const { title, content, event_date, coordinates } = req.body;
     const user_id = req.user.id;
 
     const sql = `
       INSERT INTO posts (user_id, title, content, event_date, coordinates)
-      VALUES ($1, $2, $3, NOW(), $4::jsonb)
+      VALUES ($1, $2, $3, $4, $5::jsonb)
       RETURNING
         id, user_id, title, content, event_date, coordinates;
     `;
@@ -41,6 +41,7 @@ export const createPost = async (req, res, next) => {
       user_id,
       title,
       content,
+      event_date || new Date(),
       coordinates === undefined ? null : JSON.stringify(coordinates),
     ];
 

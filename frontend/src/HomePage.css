@@ -32,9 +32,9 @@
 .list-item-content {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     width: 100%;
-    gap: 20px;
+    gap: 5px;
 }
 
 .list-item-date {
@@ -46,6 +46,7 @@
     font-weight: 500;
     color: #333;
     flex-shrink: 0;
+    margin-top: 10px;
 }
 
 .list-item:hover {
@@ -211,4 +212,8 @@
 
 .create-button:hover {
     background-color: #505050;
+}
+
+h2 {
+    font-size: 1em;
 }
