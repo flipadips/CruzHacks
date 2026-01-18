@@ -61,7 +61,12 @@ function LoginForm() {
           <button onClick={handleSubmit} className="login-button">
             Login
           </button>
-        </div>
+
+          <button onClick={handleSubmit} className="signup-button">
+            Sign up
+          </button>
+          </div>
+          
       </div>
     </div>
   );

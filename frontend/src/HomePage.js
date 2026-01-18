@@ -9,9 +9,9 @@ import CreateButton from './CreateButton';
 function HomePage() {
   const [parameters, setParameters] = useState({});
   const [items, setItems] = useState([
-    { id: 1, name: 'Location 1' },
-    { id: 2, name: 'Location 2' },
-    { id: 3, name: 'Location 3' },
+    { id: 1, name: 'Photography Club walk' },
+    { id: 2, name: 'Venstra: Office hours' },
+    { id: 3, name: 'Spongebob Musical' },
   ]);
   const [markers, setMarkers] = useState([
     { id: 1, x: 550, y: 330, label: '9' },
