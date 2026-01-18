@@ -1,4 +1,4 @@
-import { useState, createContext } from 'react';
+import { useState, createContext, useEffect } from 'react';
 
 import List from './EventList';
 import MapWindow from './MapWindow';
@@ -9,23 +9,47 @@ export const CreateModeContext = createContext();
 
 // Main HomePage Component
 function HomePage() {
-  const [parameters, setParameters] = useState({});
-  const [items, setItems] = useState([
-    { id: 1, name: 'Photography Club walk' },
-    { id: 2, name: 'Venstra: Office hours' },
-    { id: 3, name: 'Spongebob Musical' },
-  ]);
-  const [markers, setMarkers] = useState([
-    { id: 1, x: 550, y: 330, label: '9' },
-    { id: 2, x: 880, y: 580, label: '9' },
-  ]);
-  const [events, setEvents] = useState([
-    { id: 1, title: 'Food Drive', x: 500, y: 525, description: 'Community food drive at the park.' },
-    { id: 2, title: 'Concert', x: 1200, y: 300, description: 'Outdoor concert near the river.' },
-    { id: 3, title: 'Workshop', x: 900, y: 1050, description: 'Free coding workshop.' },
-  ]);
+  const [events, setEvents] = useState([]);
   const [isCreateMode, setIsCreateMode] = useState(false);
   const [popupCoords, setPopupCoords] = useState(null);
+  const [focusLocation, setFocusLocation] = useState(null);
+
+  // Fetch all existing posts from API on component mount
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/v0/posts', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          console.error('Failed to fetch posts');
+          return;
+        }
+
+        const posts = await response.json();
+        
+        // Transform posts to event format
+        const transformedEvents = posts.map((post) => ({
+          id: post.id,
+          title: post.title,
+          description: post.content,
+          event_date: post.event_date,
+          x: post.coordinates?.x || 0,
+          y: post.coordinates?.y || 0,
+        }));
+
+        setEvents(transformedEvents);
+      } catch (err) {
+        console.error('Error fetching posts:', err);
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   const addEvent = (newEvent) => {
     const eventWithId = {
@@ -36,15 +60,13 @@ function HomePage() {
   };
 
   return (
-    <CreateModeContext.Provider value={{ isCreateMode, setIsCreateMode, popupCoords, setPopupCoords, events, addEvent }}>
+    <CreateModeContext.Provider value={{ isCreateMode, setIsCreateMode, popupCoords, setPopupCoords, events, addEvent, focusLocation, setFocusLocation }}>
       <>    
         <div className="homepage-container">
-          <List items={items}/>
+          <List items={events}/>
           <div className="map-container">
-            <MapWindow markers={markers} />
-            <ParameterWindow 
-              parameters={parameters}
-            />
+            <MapWindow />
+            <ParameterWindow />
             <CreateButton />
           </div>
         </div>

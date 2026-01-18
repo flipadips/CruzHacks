@@ -10,11 +10,10 @@ export const getPosts = async (req, res, next) => {
         user_id,
         title,
         content,
-        created_at,
-        updated_at,
+        event_date,
         coordinates
       FROM posts
-      ORDER BY created_at DESC;
+      ORDER BY event_date DESC;
     `;
 
     const { rows } = await pool.query(sql);
@@ -28,14 +27,14 @@ export const getPosts = async (req, res, next) => {
 export const createPost = async (req, res, next) => {
   try {
     const pool = req.app.locals.pool;
-
-    const { user_id, title, content, coordinates } = req.body;
+    const { title, content, coordinates } = req.body;
+    const user_id = req.user.id;
 
     const sql = `
-      INSERT INTO posts (user_id, title, content, coordinates)
-      VALUES ($1, $2, $3, $4::jsonb)
+      INSERT INTO posts (user_id, title, content, event_date, coordinates)
+      VALUES ($1, $2, $3, NOW(), $4::jsonb)
       RETURNING
-        id, user_id, title, content, coordinates, created_at, updated_at;
+        id, user_id, title, content, event_date, coordinates;
     `;
 
     const values = [

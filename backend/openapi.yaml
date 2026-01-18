@@ -156,6 +156,8 @@ paths:
       description: Creates a new post for the authenticated user
       tags:
         - Posts
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -167,6 +169,13 @@ paths:
                   type: string
                 content:
                   type: string
+                coordinates:
+                  type: object
+                  properties:
+                    x:
+                      type: number
+                    y:
+                      type: number
               required:
                 - title
                 - content
@@ -187,6 +196,13 @@ paths:
                     type: string
                   content:
                     type: string
+                  coordinates:
+                    type: object
+                    properties:
+                      x:
+                        type: number
+                      y:
+                        type: number
                   created_at:
                     type: string
                     format: date-time

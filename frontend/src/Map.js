@@ -3,7 +3,7 @@ import './Map.css';
 import mapImage from './assets/map.webp';
 import { CreateModeContext } from './HomePage.js';
 
-export default function Map({ events: initialEvents = null, width = '100%', height = '600px' }) {
+export default function Map({ events: initialEvents = null, width = '100%', height = '600px', focusLocation = null }) {
   const containerRef = useRef(null);
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
   const dragState = useRef({ dragging: false, startX: 0, startY: 0, startTranslate: { x: 0, y: 0 } });
@@ -12,6 +12,22 @@ export default function Map({ events: initialEvents = null, width = '100%', heig
 
   // Use events from props if provided, otherwise use context events
   const events = initialEvents !== null ? initialEvents : contextEvents;
+
+  // Handle focusing on a specific location when item is clicked
+  useEffect(() => {
+    if (focusLocation && containerRef.current) {
+      const container = containerRef.current;
+      const containerRect = container.getBoundingClientRect();
+      const containerWidth = containerRect.width;
+      const containerHeight = containerRect.height;
+
+      // Center the location in the viewport
+      const offsetX = -(focusLocation.x - containerWidth / 2);
+      const offsetY = -(focusLocation.y - containerHeight / 2);
+
+      setTranslate({ x: offsetX, y: offsetY });
+    }
+  }, [focusLocation]);
 
   // Mouse handlers
   const onPointerDown = (clientX, clientY) => {

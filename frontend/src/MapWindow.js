@@ -5,24 +5,49 @@ import Map from './Map.js';
 import { CreateModeContext } from './HomePage.js';
 
 function MapWindow({ markers }) {
-  const { isCreateMode, popupCoords, setPopupCoords, events, addEvent } = useContext(CreateModeContext);
+  const { isCreateMode, popupCoords, setPopupCoords, events, addEvent, focusLocation } = useContext(CreateModeContext);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newEvent = {
-      title,
-      description,
-      x: popupCoords.x,
-      y: popupCoords.y
-    };
-    addEvent(newEvent);
-    console.log('New event created:', newEvent);
-    // Reset form
-    setTitle('');
-    setDescription('');
-    setPopupCoords(null);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/v0/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ 
+          title: title,
+          content: description,
+          coordinates: { x: popupCoords.x, y: popupCoords.y }
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error('Post creation failed:', data.error);
+        return;
+      }
+
+      const newEvent = {
+        title,
+        description,
+        x: popupCoords.x,
+        y: popupCoords.y
+      };
+      addEvent(newEvent);
+      console.log('New event created:', newEvent);
+      // Reset form
+      setTitle('');
+      setDescription('');
+      setPopupCoords(null);
+    } catch (err) {
+      console.error('Post creation error:', err);
+    }
   };
 
   return (
@@ -30,7 +55,7 @@ function MapWindow({ markers }) {
       className="map-window" 
       style={isCreateMode ? { border: '10px solid #f9bf00' } : {}}
     >
-      <Map events={events} />
+      <Map events={events} focusLocation={focusLocation} />
       
       {/* Create Event Popup */}
       {popupCoords && (
