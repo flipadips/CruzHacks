@@ -146,7 +146,6 @@ git commit -m "Initial commit"
 git push origin main
 ```
 
-2. Deploy to your hosting platform (Heroku, AWS, Vercel, etc.)
 
 ## Troubleshooting
 
