@@ -1,10 +1,14 @@
+import { useContext } from 'react';
 import './HomePage.css';
+import { CreateModeContext } from './HomePage.js';
 
 // Create Button Component
 function CreateButton() {
+  const { isCreateMode, setIsCreateMode } = useContext(CreateModeContext);
+
   const handleCreateClick = () => {
     console.log('Create button clicked');
-    // Add logic to create new item
+    setIsCreateMode(!isCreateMode);
   };
   return (
     <button className="create-button" onClick={handleCreateClick}>

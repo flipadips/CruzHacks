@@ -1,21 +1,17 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useContext } from 'react';
 import './Map.css';
 import mapImage from './assets/map.webp';
+import { CreateModeContext } from './HomePage.js';
 
 export default function Map({ events: initialEvents = null, width = '100%', height = '600px' }) {
   const containerRef = useRef(null);
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
   const dragState = useRef({ dragging: false, startX: 0, startY: 0, startTranslate: { x: 0, y: 0 } });
   const [selected, setSelected] = useState(null);
+  const { isCreateMode, setPopupCoords, events: contextEvents } = useContext(CreateModeContext);
 
-  // sample events when none provided
-  const sampleEvents = [
-    { id: 1, title: 'Food Drive', x: 25, y: 35, description: 'Community food drive at the park.' },
-    { id: 2, title: 'Concert', x: 60, y: 20, description: 'Outdoor concert near the river.' },
-    { id: 3, title: 'Workshop', x: 45, y: 70, description: 'Free coding workshop.' },
-  ];
-
-  const events = initialEvents && initialEvents.length ? initialEvents : sampleEvents;
+  // Use events from props if provided, otherwise use context events
+  const events = initialEvents !== null ? initialEvents : contextEvents;
 
   // Mouse handlers
   const onPointerDown = (clientX, clientY) => {
@@ -101,7 +97,7 @@ export default function Map({ events: initialEvents = null, width = '100%', heig
     return (
       <div
         className="map-marker"
-        style={{ left: `${event.x}%`, top: `${event.y}%` }}
+        style={{ left: `${event.x}px`, top: `${event.y}px` }}
         onClick={handleClick}
         role="button"
         tabIndex={0}
@@ -118,6 +114,17 @@ export default function Map({ events: initialEvents = null, width = '100%', heig
     );
   };
 
+  const handleMapClick = (e) => {
+    if (isCreateMode && !dragState.current.dragging) {
+      // Calculate the click position relative to the map inner
+      const rect = containerRef.current.getBoundingClientRect();
+      const clickX = e.clientX - rect.left - translate.x;
+      const clickY = e.clientY - rect.top - translate.y;
+      setPopupCoords({ x: Math.round(clickX), y: Math.round(clickY) });
+    }
+    setSelected(null);
+  };
+
   return (
     <div
       className={`map-viewport ${dragState.current.dragging ? 'dragging' : ''}`}
@@ -125,12 +132,11 @@ export default function Map({ events: initialEvents = null, width = '100%', heig
       ref={containerRef}
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
+      onClick={handleMapClick}
     >
       <div
         className="map-inner"
         style={{ transform: `translate(${translate.x}px, ${translate.y}px)` }}
-        // clicking the map clears any selection
-        onClick={() => setSelected(null)}
       >
 
         {/* The actual map iself */}
@@ -139,9 +145,8 @@ export default function Map({ events: initialEvents = null, width = '100%', heig
         alt="Map background"
         className="map-grid"
         style={{
-            width: '250%',
-            height: '250%',
-            objectFit: 'cover',
+            width: '3000px',
+            height: '2643px',
             pointerEvents: 'none'
         }}
         />
@@ -149,12 +154,6 @@ export default function Map({ events: initialEvents = null, width = '100%', heig
         {events.map((ev) => (
           <Marker key={ev.id} event={ev} />
         ))}
-      </div>
-
-      {/* Controls hint */}
-      <div className="map-controls">
-        <div className="map-control">Drag to pan</div>
-        <div className="map-control">Tap/click a marker for details</div>
       </div>
     </div>
   );
