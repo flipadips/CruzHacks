@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react';
 import './LoginForm.css';
+import logoImage from './assets/cruzly.svg';
 import { userContext, createUserContext } from './App';
 
 function LoginForm() {
@@ -39,7 +40,9 @@ function LoginForm() {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h1 className="login-title">Cruzly</h1>
+        <h1 className="login-title">
+          <img id="logoImage" src={logoImage}></img>
+        </h1>
         
         <div className="login-form">
           <div className="form-group">

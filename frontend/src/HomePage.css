@@ -226,3 +226,7 @@ h2 {
     padding: 0px;
     line-height: 0%;
 }
+
+#logoImage {
+    width: 50%;
+}
