@@ -91,6 +91,7 @@ app.get('/api/data', async (req, res, next) => {
 // Your routes go here; do NOT write them inline.
 // Create additional modules and delegate to their exports.
 app.post('/api/v0/login', auth.login);
+app.post('/api/v0/register', auth.register);
 app.get('/api/v0/posts', posts.getPosts);
 app.post('/api/v0/posts', auth.authenticate, posts.createPost);
 app.get('/api/v0/groups', auth.authenticate, groups.getGroups);

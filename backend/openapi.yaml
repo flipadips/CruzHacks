@@ -119,6 +119,50 @@ paths:
                 properties:
                   token:
                     type: string
+  /api/v0/register:
+    post:
+      summary: Register a new user
+      description: Create a new user account
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                  format: password
+              required:
+                - username
+                - password
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User created successfully
+                  userId:
+                    type: string
+                    format: uuid
+        '400':
+          description: Invalid input or user already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
 
   /api/v0/posts:
     get:
@@ -139,8 +183,8 @@ paths:
                     id:
                       type: string
                       format: uuid
-                    user_id:
-                      type: integer
+                    username:
+                      type: string
                     title:
                       type: string
                     content:

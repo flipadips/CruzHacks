@@ -52,6 +52,7 @@ function List({items}) {
           <div className="list-item-content">
             <div>
               <h2>{item.title}</h2>
+              <p><i>By {item.author}</i></p>
               <p>{renderDescription(item.description)}</p>
             </div>
             <div className="list-item-date">

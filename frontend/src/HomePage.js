@@ -14,6 +14,14 @@ function HomePage() {
   const [popupCoords, setPopupCoords] = useState(null);
   const [focusLocation, setFocusLocation] = useState(null);
 
+  const addEvent = (newEvent) => {
+    const eventWithId = {
+      ...newEvent,
+      id: crypto.randomUUID()
+    };
+    setEvents([...events, eventWithId]);
+  };
+
   // Fetch all existing posts from API on component mount
   useEffect(() => {
     const fetchPosts = async () => {
@@ -35,6 +43,7 @@ function HomePage() {
         // Transform posts to event format
         const transformedEvents = posts.map((post) => ({
           id: post.id,
+          author: post.username,
           title: post.title,
           description: post.content,
           event_date: post.event_date,
@@ -49,15 +58,7 @@ function HomePage() {
     };
 
     fetchPosts();
-  }, []);
-
-  const addEvent = (newEvent) => {
-    const eventWithId = {
-      ...newEvent,
-      id: events.length > 0 ? Math.max(...events.map(e => e.id)) + 1 : 1
-    };
-    setEvents([...events, eventWithId]);
-  };
+  }, [addEvent]);
 
   return (
     <CreateModeContext.Provider value={{ isCreateMode, setIsCreateMode, popupCoords, setPopupCoords, events, addEvent, focusLocation, setFocusLocation }}>

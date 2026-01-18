@@ -10,7 +10,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (
-  id SERIAL PRIMARY KEY,
+  id UUID UNIQUE PRIMARY KEY DEFAULT gen_random_uuid(), 
   username VARCHAR(100) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
   metadata JSONB DEFAULT '{}'::jsonb
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS users (
 -- Create posts table
 CREATE TABLE IF NOT EXISTS posts (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   title VARCHAR(255) NOT NULL,
   content TEXT NOT NULL,
   event_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS posts (
 
 -- Create groups table
 CREATE TABLE IF NOT EXISTS groups (
-  id SERIAL PRIMARY KEY,
+  id UUID UNIQUE PRIMARY KEY DEFAULT gen_random_uuid(), 
   name VARCHAR(255) NOT NULL,
   description TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

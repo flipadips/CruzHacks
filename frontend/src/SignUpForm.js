@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import './LoginForm.css';
 import { userContext, createUserContext } from './App';
 
-function LoginForm() {
+function SignUpForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const {setUser} = useContext(userContext);
@@ -10,7 +10,7 @@ function LoginForm() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/v0/login', {
+      const response = await fetch('http://localhost:5000/api/v0/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -24,22 +24,20 @@ function LoginForm() {
         console.error('Login failed:', data.error);
         return;
       }
-
-      // Store token and set user
-      localStorage.setItem('token', data.token);
-      setUser({ id: data.user.id, username: data.user.username });
+      console.log('Registration successful:', data.message);
+      await handleRedirect();
     } catch (err) {
       console.error('Login error:', err);
     }
   };
 
-  const handleRedirect = () => {
-    setSignup(true);
-  }
+const handleRedirect = () => {
+    setSignup(false);
+}
   return (
     <div className="login-container">
       <div className="login-card">
-        <h1 className="login-title">Cruzly</h1>
+        <h1 className="form-label">Create your new account here </h1>
         
         <div className="login-form">
           <div className="form-group">
@@ -63,11 +61,11 @@ function LoginForm() {
           </div>
 
           <button onClick={handleSubmit} className="login-button">
-            Login
+            Create
           </button>
 
           <button onClick={handleRedirect} className="signup-button">
-            Sign up
+            Cancel
           </button>
           </div>
           
@@ -76,4 +74,4 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+export default SignUpForm;

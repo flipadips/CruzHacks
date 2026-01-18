@@ -216,4 +216,11 @@
 
 h2 {
     font-size: 1em;
+    padding: 0px;
+}
+
+.i {
+    margin: 0px;
+    padding: 0px;
+    line-height: 0%;
 }

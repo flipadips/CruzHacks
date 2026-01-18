@@ -32,6 +32,46 @@ export const login = async (req, res, next) => {
   }
 };
 
+export const register = async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    const pool = req.app.locals.pool; // FIXED: Get pool from app.locals
+
+    // Validation
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Username and password are required' });
+    }
+
+    // Check if user already exists
+    const existingUser = await pool.query(
+      'SELECT * FROM users WHERE username = $1',
+      [username]
+    );
+
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({ error: 'User already exists' });
+    }
+
+    // Insert new user using pgcrypto (to match login)
+    const result = await pool.query(
+      'INSERT INTO users (username, password) VALUES ($1, crypt($2, gen_salt(\'bf\'))) RETURNING id, username',
+      [username, password]
+    );
+
+    res.status(201).json({
+      message: 'User created successfully',
+      user: {
+        id: result.rows[0].id,
+        username: result.rows[0].username
+      }
+    });
+
+  } catch (error) {
+    console.error('Registration error:', error);
+    next(error); // Pass to error handler
+  }
+};
+
 export const authenticate = async (req, res, next) => {
   try {
     console.log("AUTH HEADER:", req.headers.authorization);
