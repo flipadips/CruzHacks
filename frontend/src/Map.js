@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import './Map.css';
-import mapImage from './assets/map.png';
+import mapImage from './assets/map.webp';
 
 export default function Map({ events: initialEvents = null, width = '100%', height = '600px' }) {
   const containerRef = useRef(null);
@@ -139,8 +139,8 @@ export default function Map({ events: initialEvents = null, width = '100%', heig
         alt="Map background"
         className="map-grid"
         style={{
-            width: '100%',
-            height: '100%',
+            width: '250%',
+            height: '250%',
             objectFit: 'cover',
             pointerEvents: 'none'
         }}
