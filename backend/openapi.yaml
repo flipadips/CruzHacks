@@ -126,8 +126,6 @@ paths:
       description: Retrieves all posts user can see
       tags:
         - Posts
-      security:
-        - bearerAuth: []
       responses:
         '200':
           description: List of posts
@@ -158,8 +156,6 @@ paths:
       description: Creates a new post for the authenticated user
       tags:
         - Posts
-      security:
-        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -201,8 +197,6 @@ paths:
       description: Retrieves all groups for the authenticated user
       tags:
         - Groups
-      security:
-        - bearerAuth: []
       responses:
         '200':
           description: List of groups
@@ -239,3 +233,9 @@ paths:
                   type: object
 
 
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
