@@ -96,39 +96,32 @@ export default function Map({ events: initialEvents = null, width = '100%', heig
     };
   }, []);
 
-  // Helper to render marker popup inside the translated map
-  const Marker = ({ event }) => {
-    const [open, setOpen] = useState(false);
-    useEffect(() => {
-      if (selected && selected.id !== event.id) setOpen(false);
-    }, [selected, event.id]);
-
-    const handleClick = (e) => {
-      // prevent panning start
-      e.stopPropagation();
-      setSelected(event);
-      setOpen(true);
-    };
-
-    return (
-      <div
-        className="map-marker"
-        style={{ left: `${event.x}px`, top: `${event.y}px` }}
-        onClick={handleClick}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => e.key === 'Enter' && handleClick(e)}
-      >
-        <div className="map-marker-dot" />
-        {selected && selected.id === event.id && (
-          <div className="map-popup" onClick={(ev) => ev.stopPropagation()}>
-            <div className="map-popup-title">{event.title}</div>
-            <div className="map-popup-body">{event.description}</div>
-          </div>
-        )}
-      </div>
-    );
+const Marker = ({ event }) => {
+  const handleClick = (e) => {
+    // prevent panning start
+    e.stopPropagation();
+    setSelected(event);
   };
+
+  return (
+    <div
+      className="map-marker"
+      style={{ left: `${event.x}px`, top: `${event.y}px` }}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && handleClick(e)}
+    >
+      <div className="map-marker-dot" />
+      {selected && selected.id === event.id && (
+        <div className="map-popup" onClick={(ev) => ev.stopPropagation()}>
+          <div className="map-popup-title">{event.title}</div>
+          <div className="map-popup-body">{event.description}</div>
+        </div>
+      )}
+    </div>
+  );
+};
 
   const handleMapClick = (e) => {
     if (isCreateMode && !dragState.current.dragging) {

@@ -5,7 +5,6 @@ import { userContext, createUserContext } from './App';
 function SignUpForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const {setUser} = useContext(userContext);
   const {setSignup} = useContext(createUserContext);
 
   const handleSubmit = async () => {

@@ -41,7 +41,7 @@ function LoginForm() {
     <div className="login-container">
       <div className="login-card">
         <h1 className="login-title">
-          <img id="logoImage" src={logoImage}></img>
+          <img id="logoImage" src={logoImage} alt="LogoImage"></img>
         </h1>
         
         <div className="login-form">
