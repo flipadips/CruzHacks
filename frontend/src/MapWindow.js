@@ -5,7 +5,7 @@ import Map from './Map.js';
 import { CreateModeContext } from './HomePage.js';
 
 function MapWindow({ markers }) {
-  const { isCreateMode, popupCoords, setPopupCoords, events, addEvent, focusLocation } = useContext(CreateModeContext);
+  const { isCreateMode, setIsCreateMode, popupCoords, setPopupCoords, events, addEvent, focusLocation } = useContext(CreateModeContext);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [eventDate, setEventDate] = useState('');
@@ -39,6 +39,7 @@ function MapWindow({ markers }) {
         title,
         description,
         event_date: eventDate,
+        author: data.username,
         x: popupCoords.x,
         y: popupCoords.y
       };
@@ -49,6 +50,7 @@ function MapWindow({ markers }) {
       setDescription('');
       setEventDate('');
       setPopupCoords(null);
+      setIsCreateMode(!isCreateMode);
     } catch (err) {
       console.error('Post creation error:', err);
     }

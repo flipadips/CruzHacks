@@ -58,7 +58,7 @@ function HomePage() {
     };
 
     fetchPosts();
-  }, [addEvent]);
+  }, []);
 
   return (
     <CreateModeContext.Provider value={{ isCreateMode, setIsCreateMode, popupCoords, setPopupCoords, events, addEvent, focusLocation, setFocusLocation }}>
