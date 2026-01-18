@@ -16,6 +16,7 @@
     flex-direction: column;
     gap: 25px;
     border-radius: 15px;
+    direction:rtl; 
 }
 
 .list-item {
@@ -27,6 +28,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    direction:ltr; 
 }
 
 .list-item-content {
