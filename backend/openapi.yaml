@@ -102,12 +102,12 @@ paths:
             schema:
               type: object
               properties:
-                email:
+                userame:
                   type: string
                 password:
                   type: string
               required:
-                - email
+                - username
                 - password
       responses:
         '200':

@@ -26,7 +26,7 @@ function HomePage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/v0/posts', {
+        const response = await fetch('https://cruzhacks.onrender.com/api/v0/posts', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

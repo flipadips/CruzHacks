@@ -9,7 +9,7 @@ function SignUpForm() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/v0/register', {
+      const response = await fetch('https://cruzhacks.onrender.com/api/v0/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

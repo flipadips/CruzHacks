@@ -14,7 +14,7 @@ function MapWindow({ markers }) {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/v0/posts', {
+      const response = await fetch('https://cruzhacks.onrender.com/api/v0/posts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

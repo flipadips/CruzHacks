@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import './LoginForm.css';
-import logoImage from './assets/cruzly.svg';
+import logoImage from './assets/cruzly.jpeg';
 import { userContext, createUserContext } from './App';
 
 function LoginForm() {
@@ -11,7 +11,7 @@ function LoginForm() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/v0/login', {
+      const response = await fetch('https://cruzhacks.onrender.com/api/v0/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
