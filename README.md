@@ -2,6 +2,11 @@
 
 https://devpost.com/software/cruzly
 
+Have you ever wanted to get rid of your furniture, see club/study events, or geta haircut on campus? well know you can do it in one centralized webpage!
+
+Made temporarily deployable with: 
+Vercel, SupaBase, Render
+
 ## Inspiration
 The inspiration for our project mainly stemmed from problems of being unable to see UCSC life activity that is happening all around them. Many peers face social problems, such as struggling to spread the word that they need to get rid of their furniture, or club events. Our webpage fosters a community between UCSC students and encourages curiosity by showing all events near you.
 
