@@ -4,6 +4,8 @@ https://devpost.com/software/cruzly
 
 Have you ever wanted to get rid of your furniture, see club/study events, or geta haircut on campus? well know you can do it in one centralized webpage!
 
+https://cruzhacksdeploy.vercel.app/
+
 Made temporarily deployable with: 
 Vercel, SupaBase, Render
 
